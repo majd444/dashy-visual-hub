@@ -1,11 +1,14 @@
+
 import React, { useState } from 'react';
-import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Clock, Layout } from 'lucide-react';
+import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Clock } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { saveAgent } from '@/lib/agents';
+import { toast } from '@/hooks/use-toast';
 
 interface AgentCreationSheetProps {
   isOpen: boolean;
@@ -17,6 +20,24 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ isOpen, 
   const [selectedLLM, setSelectedLLM] = useState('gpt-4o');
   const [temperature, setTemperature] = useState(0.7);
   const [promptText, setPromptText] = useState('You are a helpful AI assistant.');
+  
+  const handleCreateBot = () => {
+    const newAgent = {
+      id: crypto.randomUUID(),
+      name: botName,
+      prompt: promptText,
+      model: selectedLLM,
+      temperature: temperature,
+      createdAt: new Date(),
+    };
+    
+    saveAgent(newAgent);
+    toast({
+      title: "Agent Created",
+      description: `${botName} has been successfully created.`,
+    });
+    onOpenChange(false);
+  };
   
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
@@ -393,7 +414,7 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ isOpen, 
             <Button variant="outline" className="mr-2" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button>
+            <Button onClick={handleCreateBot}>
               Create Bot
             </Button>
           </div>

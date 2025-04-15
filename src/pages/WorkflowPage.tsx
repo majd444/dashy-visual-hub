@@ -7,8 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Clock } from 'lucide-react';
+import { getAgents } from '@/lib/agents';
 
 const WorkflowPage = () => {
+  const agents = getAgents();
+  
   return (
     <div className="flex-1 p-8 bg-gray-50">
       <h1 className="text-2xl font-bold mb-6">Bot History & Deployment</h1>
