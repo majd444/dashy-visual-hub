@@ -5,6 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Search, Plus } from 'lucide-react';
 
 export const SearchBar = () => {
+  const handleCreateAgent = () => {
+    window.open('https://github.com/majd444/bot-builder-studio-alpha.git', '_blank');
+  };
+
   return (
     <div className="flex justify-between items-center w-full mb-6">
       <div className="relative w-full max-w-md">
@@ -16,7 +20,10 @@ export const SearchBar = () => {
         />
       </div>
       
-      <Button className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2">
+      <Button 
+        className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2"
+        onClick={handleCreateAgent}
+      >
         <Plus size={16} />
         Create a new agent
       </Button>

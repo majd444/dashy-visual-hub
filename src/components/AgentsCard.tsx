@@ -5,6 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from 'lucide-react';
 
 export const AgentsCard = () => {
+  const handleCreateAgent = () => {
+    window.open('https://github.com/majd444/bot-builder-studio-alpha.git', '_blank');
+  };
+
   return (
     <Card className="border border-gray-200">
       <CardContent className="p-6">
@@ -17,7 +21,10 @@ export const AgentsCard = () => {
             There are no active scenarios in this organization.
           </p>
           
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2">
+          <Button 
+            className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2"
+            onClick={handleCreateAgent}
+          >
             Create a new agent
             <Plus size={16} />
           </Button>
