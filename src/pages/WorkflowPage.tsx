@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 const WorkflowPage = () => {
   return (
@@ -48,15 +50,29 @@ const WorkflowPage = () => {
             <TabsContent value="settings">
               <div className="space-y-4">
                 <div>
-                  <label className="block font-medium mb-2">Chat Title</label>
-                  <Input placeholder="Chat with AI" defaultValue="Chat with AI" />
+                  <Label className="block font-medium mb-2">Chat Title</Label>
+                  <Input placeholder="Chat with AI" defaultValue="Chat with AI" className="max-w-md" />
                 </div>
+                
                 <div>
-                  <label className="block font-medium mb-2">Primary Color</label>
+                  <Label className="block font-medium mb-2">Primary Color</Label>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-blue-500"></div>
-                    <Input type="text" defaultValue="#3B82F6" className="max-w-xs" />
+                    <Input type="text" defaultValue="#3B82F6" className="max-w-xs w-32" />
                   </div>
+                </div>
+                
+                <div>
+                  <Label className="block font-medium mb-2">Background Color</Label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gray-100"></div>
+                    <Input type="text" defaultValue="#F3F4F6" className="max-w-xs w-32" />
+                  </div>
+                </div>
+                
+                <div>
+                  <Label className="block font-medium mb-2">Outside Text</Label>
+                  <Input defaultValue="Chat with our AI assistant!" className="max-w-md" />
                 </div>
               </div>
             </TabsContent>
@@ -71,8 +87,19 @@ const WorkflowPage = () => {
           
           <div className="mb-6">
             <h3 className="font-medium mb-2">Initial Greeting</h3>
-            <div className="bg-gray-50 p-4 rounded-lg border">
-              <p>Hi there! 👋 How can I assist you today?</p>
+            <Textarea 
+              defaultValue="Hi there! 👋 How can I assist you today?"
+              rows={3}
+              className="mb-4"
+            />
+            <Button variant="outline" size="sm">Update Greeting</Button>
+          </div>
+          
+          <div className="mb-6">
+            <h3 className="font-medium mb-2">Conversation Flow</h3>
+            <div className="bg-gray-50 p-6 rounded-lg border flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-gray-500"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              <span className="text-gray-500">Conversation flow builder coming soon</span>
             </div>
           </div>
           
