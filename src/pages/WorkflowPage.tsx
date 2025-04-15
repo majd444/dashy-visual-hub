@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Clock } from 'lucide-react';
 
 const WorkflowPage = () => {
   return (
     <div className="flex-1 p-8 bg-gray-50">
-      <h1 className="text-2xl font-bold mb-6">Bot Workflow & Deployment</h1>
+      <h1 className="text-2xl font-bold mb-6">Bot History & Deployment</h1>
       
       <Card className="mb-8">
         <CardContent className="p-6">
@@ -82,29 +83,40 @@ const WorkflowPage = () => {
       
       <Card>
         <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Chat Workflow</h2>
-          <p className="text-gray-600 mb-6">Define how your bot handles conversations</p>
+          <h2 className="text-xl font-semibold mb-4">Conversation History</h2>
+          <p className="text-gray-600 mb-6">View past interactions with your bot</p>
           
-          <div className="mb-6">
-            <h3 className="font-medium mb-2">Initial Greeting</h3>
-            <Textarea 
-              defaultValue="Hi there! 👋 How can I assist you today?"
-              rows={3}
-              className="mb-4"
-            />
-            <Button variant="outline" size="sm">Update Greeting</Button>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-medium">Recent Conversations</h3>
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <Clock size={16} />
+              Last 7 days
+            </Button>
           </div>
           
-          <div className="mb-6">
-            <h3 className="font-medium mb-2">Conversation Flow</h3>
-            <div className="bg-gray-50 p-6 rounded-lg border flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-gray-500"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-              <span className="text-gray-500">Conversation flow builder coming soon</span>
+          <div className="bg-gray-50 p-8 rounded-lg border text-center mb-6">
+            <Clock className="mx-auto text-gray-400 mb-4" size={48} />
+            <h4 className="text-lg font-medium mb-2">No conversation history yet</h4>
+            <p className="text-gray-500">Conversation history will appear here once users start chatting with your bot.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white border rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">0</div>
+              <div className="text-sm text-gray-500">Total Conversations</div>
+            </div>
+            <div className="bg-white border rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">0%</div>
+              <div className="text-sm text-gray-500">Completion Rate</div>
+            </div>
+            <div className="bg-white border rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-purple-600 mb-2">0m</div>
+              <div className="text-sm text-gray-500">Avg. Conversation Time</div>
             </div>
           </div>
           
           <Button>
-            Edit Conversation Flow
+            View Detailed Analytics
           </Button>
         </CardContent>
       </Card>

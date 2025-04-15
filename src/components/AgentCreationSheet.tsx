@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Palette, Layout } from 'lucide-react';
+import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Clock, Layout } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -59,10 +58,10 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ isOpen, 
                     Style
                   </TabsTrigger>
                   <TabsTrigger 
-                    value="workflow" 
+                    value="history" 
                     className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
                   >
-                    Workflow
+                    History
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -304,76 +303,87 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ isOpen, 
                 </div>
               </TabsContent>
               
-              {/* Workflow Tab */}
-              <TabsContent value="workflow" className="p-6">
-                <h2 className="text-3xl font-bold mb-4">Bot Workflow & Deployment</h2>
+              {/* History Tab */}
+              <TabsContent value="history" className="p-6">
+                <h2 className="text-3xl font-bold mb-4">Conversation History</h2>
+                <p className="text-gray-600 mb-6">View and analyze past conversations with your bot</p>
                 
-                <div className="mb-10">
-                  <h3 className="text-xl font-semibold mb-2">Deploy Your Bot</h3>
-                  <p className="text-gray-600 mb-4">Integrate your bot with your website or application</p>
-                  
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="flex-1">
-                      <Button variant="outline" className="w-full justify-between">
-                        <span className="flex items-center gap-2">
-                          <code>&lt;/&gt;</code> Embed Code
-                        </span>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-medium">Recent Conversations</h3>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm">
+                        <Clock className="mr-2 h-4 w-4" />
+                        Last 7 days
                       </Button>
-                    </div>
-                    <div className="flex-1">
-                      <Button variant="outline" className="w-full justify-between text-left">
-                        <span className="flex items-center gap-2">
-                          Chat Settings
-                        </span>
+                      <Button variant="outline" size="sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Clear
                       </Button>
                     </div>
                   </div>
                   
-                  <div className="bg-gray-50 p-4 rounded-lg border my-6">
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm text-gray-500">HTML</span>
-                      <Button variant="ghost" size="sm" className="h-6 p-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <div className="bg-gray-50 border rounded-lg p-8 text-center">
+                    <Clock className="mx-auto text-gray-400 mb-4" size={48} />
+                    <h4 className="text-lg font-medium mb-2">No conversation history yet</h4>
+                    <p className="text-gray-500 mb-4">Your bot conversation history will appear here once users start interacting with it.</p>
+                    <Button variant="outline">Learn about analytics</Button>
+                  </div>
+                  
+                  <div className="bg-white border rounded-lg p-4 hidden">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 1-2-2v-4"/><circle cx="12" cy="7" r="4"/></svg>
+                          </div>
+                          <div>
+                            <h5 className="font-medium">Conversation with User #1234</h5>
+                            <p className="text-sm text-gray-500">12 messages • Today, 2:30 PM</p>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm">
+                          View
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Analytics & Insights</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-white border rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-blue-600 mb-2">0</div>
+                        <div className="text-sm text-gray-500">Total Conversations</div>
+                      </div>
+                      <div className="bg-white border rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-green-600 mb-2">0%</div>
+                        <div className="text-sm text-gray-500">Completion Rate</div>
+                      </div>
+                      <div className="bg-white border rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-purple-600 mb-2">0m</div>
+                        <div className="text-sm text-gray-500">Avg. Conversation Time</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Export Options</h3>
+                    <div className="flex flex-wrap gap-4">
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Export as CSV
+                      </Button>
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Export as JSON
+                      </Button>
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Generate Report
                       </Button>
                     </div>
-                    <code className="text-xs sm:text-sm block text-gray-800">
-                      &lt;script src="https://bot-builder-studio.com/embed.js" data-bot-id="your-bot-id"&gt;&lt;/script&gt;
-                    </code>
                   </div>
-                  
-                  <div className="flex gap-4">
-                    <Button className="flex-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                      Download Config
-                    </Button>
-                    <Button variant="outline" className="flex-1">
-                      Share
-                    </Button>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Chat Workflow</h3>
-                  <p className="text-gray-600 mb-4">Define how your bot handles conversations</p>
-                  
-                  <div className="mb-6">
-                    <h4 className="font-medium mb-2">Initial Greeting</h4>
-                    <div className="bg-gray-50 p-4 rounded-lg border">
-                      <p>Hi there! 👋 How can I assist you today?</p>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <h4 className="font-medium mb-2">Conversation Flow</h4>
-                    <div className="bg-gray-50 p-6 rounded-lg border flex items-center justify-center">
-                      <Layout className="mr-2 text-gray-500" />
-                      <span className="text-gray-500">Conversation flow builder coming soon</span>
-                    </div>
-                  </div>
-                  
-                  <Button>
-                    Edit Conversation Flow
-                  </Button>
                 </div>
               </TabsContent>
             </Tabs>
