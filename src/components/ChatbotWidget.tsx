@@ -17,9 +17,14 @@ interface ChatMessage {
 interface ChatbotWidgetProps {
   agent: Agent | null;
   onClose: () => void;
+  isEmbedded?: boolean;
 }
 
-export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ agent, onClose }) => {
+export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ 
+  agent, 
+  onClose,
+  isEmbedded = false
+}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
@@ -93,8 +98,8 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ agent, onClose }) 
     }
   };
 
-  // Chat bubble UI
-  if (isMinimized) {
+  // Chat bubble UI - when minimized (only for non-embedded version)
+  if (!isEmbedded && isMinimized) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
         <Button 
@@ -107,6 +112,81 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ agent, onClose }) 
     );
   }
 
+  // For embedded version, render just the chat content without the card wrapper
+  if (isEmbedded) {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          {messages.map((msg, index) => (
+            <div 
+              key={index} 
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`flex gap-2 max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                {msg.role !== 'user' && (
+                  <div className="h-8 w-8 rounded-full overflow-hidden flex-shrink-0 bg-white border">
+                    <Bot size={20} className="h-full w-full p-1" />
+                  </div>
+                )}
+                <div className={`py-2 px-3 rounded-lg ${
+                  msg.role === 'user' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-white border'
+                }`}>
+                  <div className="text-sm whitespace-pre-line">{msg.content}</div>
+                  
+                  {msg.includeLink && msg.linkUrl && (
+                    <a 
+                      href={msg.linkUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-blue-500 hover:underline block mt-1"
+                    >
+                      {msg.linkUrl}
+                    </a>
+                  )}
+                  
+                  <p className="text-[10px] mt-1 opacity-70 text-right">
+                    a few seconds ago
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+        
+        <div className="p-3 bg-white border-t">
+          <div className="flex items-center w-full gap-2">
+            <Input
+              placeholder="Type your message..."
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="flex-1"
+            />
+            <Button 
+              size="icon"
+              variant="ghost"
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <Paperclip size={18} />
+            </Button>
+            <Button 
+              onClick={handleSendMessage}
+              disabled={messageInput.trim() === ''}
+              size="icon"
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Send size={16} />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default floating widget (non-embedded)
   return (
     <Card className="fixed bottom-6 right-6 w-[380px] h-[600px] shadow-lg flex flex-col z-50 border rounded-2xl overflow-hidden">
       <CardHeader className="bg-blue-600 text-white p-3 flex flex-row justify-between items-center">
