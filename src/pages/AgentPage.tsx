@@ -9,6 +9,7 @@ import { getAgents, Agent } from '@/lib/agents';
 const AgentPage = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   
   useEffect(() => {
     // Load agents when component mounts
@@ -34,8 +35,14 @@ const AgentPage = () => {
   const handleOpenChange = (open: boolean) => {
     setIsSheetOpen(open);
     if (!open) {
+      setSelectedAgent(null);
       setAgents(getAgents());
     }
+  };
+
+  const handleConfigureAgent = (agent: Agent) => {
+    setSelectedAgent(agent);
+    setIsSheetOpen(true);
   };
 
   return (
@@ -82,7 +89,11 @@ const AgentPage = () => {
                 </div>
                 
                 <div className="flex gap-2">
-                  <Button className="flex-1" variant="outline">
+                  <Button 
+                    className="flex-1" 
+                    variant="outline"
+                    onClick={() => handleConfigureAgent(agent)}
+                  >
                     <Settings size={16} className="mr-2" />
                     Configure
                   </Button>
@@ -115,7 +126,11 @@ const AgentPage = () => {
         </Card>
       )}
       
-      <AgentCreationSheet isOpen={isSheetOpen} onOpenChange={handleOpenChange} />
+      <AgentCreationSheet 
+        isOpen={isSheetOpen} 
+        onOpenChange={handleOpenChange} 
+        existingAgent={selectedAgent}
+      />
     </div>
   );
 };

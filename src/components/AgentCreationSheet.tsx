@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Clock } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,35 +7,86 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { saveAgent } from '@/lib/agents';
+import { saveAgent, Agent, updateAgent } from '@/lib/agents';
 import { toast } from '@/hooks/use-toast';
 
 interface AgentCreationSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  existingAgent?: Agent | null;
 }
 
-export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ isOpen, onOpenChange }) => {
+export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ 
+  isOpen, 
+  onOpenChange,
+  existingAgent = null
+}) => {
   const [botName, setBotName] = useState('AI Assistant');
   const [selectedLLM, setSelectedLLM] = useState('gpt-4o');
   const [temperature, setTemperature] = useState(0.7);
   const [promptText, setPromptText] = useState('You are a helpful AI assistant.');
+  const [isEditing, setIsEditing] = useState(false);
+  const [agentId, setAgentId] = useState<string>('');
+  const [createdAt, setCreatedAt] = useState<Date>(new Date());
   
-  const handleCreateBot = () => {
-    const newAgent = {
-      id: crypto.randomUUID(),
-      name: botName,
-      prompt: promptText,
-      model: selectedLLM,
-      temperature: temperature,
-      createdAt: new Date(),
-    };
+  // Load existing agent data when opened
+  useEffect(() => {
+    if (existingAgent) {
+      setBotName(existingAgent.name);
+      setSelectedLLM(existingAgent.model);
+      setTemperature(existingAgent.temperature);
+      setPromptText(existingAgent.prompt);
+      setAgentId(existingAgent.id);
+      setCreatedAt(new Date(existingAgent.createdAt));
+      setIsEditing(true);
+    } else {
+      setBotName('AI Assistant');
+      setSelectedLLM('gpt-4o');
+      setTemperature(0.7);
+      setPromptText('You are a helpful AI assistant.');
+      setAgentId('');
+      setCreatedAt(new Date());
+      setIsEditing(false);
+    }
+  }, [existingAgent, isOpen]);
+  
+  const handleSaveBot = () => {
+    if (isEditing) {
+      // Update existing agent
+      const updatedAgent: Agent = {
+        id: agentId,
+        name: botName,
+        prompt: promptText,
+        model: selectedLLM,
+        temperature: temperature,
+        createdAt: createdAt,
+      };
+      
+      updateAgent(updatedAgent);
+      toast({
+        title: "Agent Updated",
+        description: `${botName} has been successfully updated.`,
+      });
+    } else {
+      // Create new agent
+      const newAgent: Agent = {
+        id: crypto.randomUUID(),
+        name: botName,
+        prompt: promptText,
+        model: selectedLLM,
+        temperature: temperature,
+        createdAt: new Date(),
+      };
+      
+      saveAgent(newAgent);
+      toast({
+        title: "Agent Created",
+        description: `${botName} has been successfully created.`,
+      });
+    }
     
-    saveAgent(newAgent);
-    toast({
-      title: "Agent Created",
-      description: `${botName} has been successfully created.`,
-    });
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('agentsUpdated'));
     onOpenChange(false);
   };
   
@@ -46,7 +97,9 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ isOpen, 
           <DrawerHeader className="border-b p-6">
             <div className="flex items-center gap-2">
               <Bot size={24} />
-              <DrawerTitle className="text-xl">Bot Builder Studio</DrawerTitle>
+              <DrawerTitle className="text-xl">
+                {isEditing ? `Edit ${botName}` : "Bot Builder Studio"}
+              </DrawerTitle>
             </div>
           </DrawerHeader>
           
@@ -414,8 +467,8 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({ isOpen, 
             <Button variant="outline" className="mr-2" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCreateBot}>
-              Create Bot
+            <Button onClick={handleSaveBot}>
+              {isEditing ? "Save Changes" : "Create Bot"}
             </Button>
           </div>
         </div>

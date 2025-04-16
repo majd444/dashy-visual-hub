@@ -9,6 +9,7 @@ import { getAgents, Agent } from '@/lib/agents';
 export const AgentsCard = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   
   useEffect(() => {
     // Load agents when component mounts
@@ -34,8 +35,14 @@ export const AgentsCard = () => {
   const handleOpenChange = (open: boolean) => {
     setIsSheetOpen(open);
     if (!open) {
+      setSelectedAgent(null);
       setAgents(getAgents());
     }
+  };
+
+  const handleManageAgent = (agent: Agent) => {
+    setSelectedAgent(agent);
+    setIsSheetOpen(true);
   };
   
   return (
@@ -59,7 +66,11 @@ export const AgentsCard = () => {
                       <p className="text-sm text-gray-500">Model: {agent.model}</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleManageAgent(agent)}
+                  >
                     Manage
                   </Button>
                 </div>
@@ -91,7 +102,11 @@ export const AgentsCard = () => {
         </CardContent>
       </Card>
 
-      <AgentCreationSheet isOpen={isSheetOpen} onOpenChange={handleOpenChange} />
+      <AgentCreationSheet 
+        isOpen={isSheetOpen} 
+        onOpenChange={handleOpenChange} 
+        existingAgent={selectedAgent} 
+      />
     </>
   );
 };

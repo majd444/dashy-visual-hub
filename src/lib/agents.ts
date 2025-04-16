@@ -20,3 +20,18 @@ export const getAgents = (): Agent[] => {
   if (!agentsJson) return [];
   return JSON.parse(agentsJson);
 };
+
+export const updateAgent = (updatedAgent: Agent): void => {
+  const agents = getAgents();
+  const index = agents.findIndex(agent => agent.id === updatedAgent.id);
+  
+  if (index !== -1) {
+    agents[index] = updatedAgent;
+    localStorage.setItem('agents', JSON.stringify(agents));
+  }
+};
+
+export const getAgentById = (id: string): Agent | undefined => {
+  const agents = getAgents();
+  return agents.find(agent => agent.id === id);
+};
