@@ -18,7 +18,13 @@ export const saveAgent = (agent: Agent): void => {
 export const getAgents = (): Agent[] => {
   const agentsJson = localStorage.getItem('agents');
   if (!agentsJson) return [];
-  return JSON.parse(agentsJson);
+  
+  // Parse and ensure createdAt is a Date object
+  const agents = JSON.parse(agentsJson);
+  return agents.map((agent: any) => ({
+    ...agent,
+    createdAt: new Date(agent.createdAt)
+  }));
 };
 
 export const updateAgent = (updatedAgent: Agent): void => {
@@ -34,4 +40,12 @@ export const updateAgent = (updatedAgent: Agent): void => {
 export const getAgentById = (id: string): Agent | undefined => {
   const agents = getAgents();
   return agents.find(agent => agent.id === id);
+};
+
+export const deleteAgent = (id: string): void => {
+  const agents = getAgents();
+  const filteredAgents = agents.filter(agent => agent.id !== id);
+  localStorage.setItem('agents', JSON.stringify(filteredAgents));
+  // Dispatch custom event to notify other components
+  window.dispatchEvent(new Event('agentsUpdated'));
 };
