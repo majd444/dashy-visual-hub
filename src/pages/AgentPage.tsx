@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -73,8 +74,16 @@ const AgentPage = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                        <Bot size={28} />
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 overflow-hidden">
+                        {agent.avatar ? (
+                          <img 
+                            src={agent.avatar} 
+                            alt={agent.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <Bot size={28} />
+                        )}
                       </div>
                       <div>
                         <h2 className="font-semibold text-lg">{agent.name}</h2>

@@ -6,6 +6,7 @@ export interface Agent {
   model: string;
   temperature: number;
   createdAt: Date;
+  avatar?: string;
 }
 
 // For demo purposes, we'll use localStorage to store agents
@@ -48,4 +49,18 @@ export const deleteAgent = (id: string): void => {
   localStorage.setItem('agents', JSON.stringify(filteredAgents));
   // Dispatch custom event to notify other components
   window.dispatchEvent(new Event('agentsUpdated'));
+};
+
+// Helper function to generate example messages based on agent persona
+export const getAgentWelcomeMessage = (agent: Agent): string => {
+  const templates = [
+    `Hi there! I'm ${agent.name}. How can I assist you today?`,
+    `Hello! I'm ${agent.name}, an AI assistant designed to help with your questions.`,
+    `Welcome! My name is ${agent.name}. What can I help you with?`,
+    `Hi, How can we help you?`
+  ];
+  
+  // Select a random template or use the first one
+  const randomIndex = Math.floor(Math.random() * templates.length);
+  return templates[randomIndex];
 };
