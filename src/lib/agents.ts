@@ -7,6 +7,11 @@ export interface Agent {
   temperature: number;
   createdAt: Date;
   avatar?: string;
+  // Style customization properties
+  primaryColor?: string;
+  backgroundColor?: string;
+  outsideImageUrl?: string;
+  outsideText?: string;
 }
 
 // For demo purposes, we'll use localStorage to store agents
