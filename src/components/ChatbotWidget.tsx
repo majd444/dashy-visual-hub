@@ -14,16 +14,23 @@ interface ChatMessage {
   linkUrl?: string;
 }
 
+interface CustomStyles {
+  primaryColor?: string;
+  backgroundColor?: string;
+}
+
 interface ChatbotWidgetProps {
   agent: Agent | null;
   onClose: () => void;
   isEmbedded?: boolean;
+  customStyles?: CustomStyles;
 }
 
 export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ 
   agent, 
   onClose,
-  isEmbedded = false
+  isEmbedded = false,
+  customStyles = {}
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -35,6 +42,10 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
   const [messageInput, setMessageInput] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Default styles
+  const primaryColor = customStyles.primaryColor || '#3B82F6';
+  const backgroundColor = customStyles.backgroundColor || '#F3F4F6';
   
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
@@ -103,7 +114,8 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
     return (
       <div className="fixed bottom-6 right-6 z-50">
         <Button 
-          className="rounded-full h-16 w-16 bg-blue-600 hover:bg-blue-700 p-0 flex items-center justify-center"
+          className="rounded-full h-16 w-16 p-0 flex items-center justify-center"
+          style={{backgroundColor: primaryColor}}
           onClick={() => setIsMinimized(false)}
         >
           <Bot size={28} />
@@ -116,7 +128,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
   if (isEmbedded) {
     return (
       <div className="flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{backgroundColor: backgroundColor}}>
           {messages.map((msg, index) => (
             <div 
               key={index} 
@@ -130,9 +142,11 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
                 )}
                 <div className={`py-2 px-3 rounded-lg ${
                   msg.role === 'user' 
-                    ? 'bg-blue-600 text-white' 
+                    ? 'text-white' 
                     : 'bg-white border'
-                }`}>
+                }`}
+                style={msg.role === 'user' ? {backgroundColor: primaryColor} : {}}
+                >
                   <div className="text-sm whitespace-pre-line">{msg.content}</div>
                   
                   {msg.includeLink && msg.linkUrl && (
@@ -176,7 +190,8 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
               onClick={handleSendMessage}
               disabled={messageInput.trim() === ''}
               size="icon"
-              className="bg-blue-600 hover:bg-blue-700"
+              style={{backgroundColor: primaryColor}}
+              className="hover:opacity-90"
             >
               <Send size={16} />
             </Button>
@@ -189,9 +204,9 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
   // Default floating widget (non-embedded)
   return (
     <Card className="fixed bottom-6 right-6 w-[380px] h-[600px] shadow-lg flex flex-col z-50 border rounded-2xl overflow-hidden">
-      <CardHeader className="bg-blue-600 text-white p-3 flex flex-row justify-between items-center">
+      <CardHeader className="text-white p-3 flex flex-row justify-between items-center" style={{backgroundColor: primaryColor}}>
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-white hover:bg-blue-700 h-8 w-8 p-0">
+          <Button variant="ghost" size="icon" className="text-white hover:bg-opacity-20 h-8 w-8 p-0">
             <ChevronLeft size={20} />
           </Button>
           <div className="flex items-center gap-2">
@@ -210,16 +225,16 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
           </div>
         </div>
         <div className="flex gap-1">
-          <Button variant="ghost" size="icon" onClick={() => setIsMinimized(true)} className="text-white hover:bg-blue-700 h-7 w-7 p-0">
+          <Button variant="ghost" size="icon" onClick={() => setIsMinimized(true)} className="text-white hover:bg-opacity-20 h-7 w-7 p-0">
             <Minimize2 size={16} />
           </Button>
-          <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-blue-700 h-7 w-7 p-0">
+          <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-opacity-20 h-7 w-7 p-0">
             <X size={16} />
           </Button>
         </div>
       </CardHeader>
       
-      <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+      <CardContent className="flex-1 overflow-y-auto p-4 space-y-4" style={{backgroundColor: backgroundColor}}>
         {messages.map((msg, index) => (
           <div 
             key={index} 
@@ -241,9 +256,11 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
               )}
               <div className={`py-2 px-3 rounded-lg ${
                 msg.role === 'user' 
-                  ? 'bg-blue-600 text-white' 
+                  ? 'text-white' 
                   : 'bg-white border'
-              }`}>
+              }`}
+              style={msg.role === 'user' ? {backgroundColor: primaryColor} : {}}
+              >
                 <div className="text-sm whitespace-pre-line">{msg.content}</div>
                 
                 {msg.includeLink && msg.linkUrl && (
@@ -287,7 +304,8 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({
             onClick={handleSendMessage}
             disabled={messageInput.trim() === ''}
             size="icon"
-            className="bg-blue-600 hover:bg-blue-700"
+            style={{backgroundColor: primaryColor}}
+            className="hover:opacity-90"
           >
             <Send size={16} />
           </Button>

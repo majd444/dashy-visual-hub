@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Clock, MessageSquare, ArrowLeft } from 'lucide-react';
+import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Clock, MessageSquare, ArrowLeft, RefreshCw, X } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,13 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
   const [showChatbot, setShowChatbot] = useState(false);
   const [activeTab, setActiveTab] = useState('configuration');
   
+  // Style customization options
+  const [primaryColor, setPrimaryColor] = useState('#3B82F6');
+  const [backgroundColor, setBackgroundColor] = useState('#F3F4F6');
+  const [outsideImageUrl, setOutsideImageUrl] = useState('');
+  const [outsideText, setOutsideText] = useState('Chat with our AI assistant!');
+  const [refreshChatbot, setRefreshChatbot] = useState(0);
+  
   useEffect(() => {
     if (existingAgent) {
       setBotName(existingAgent.name);
@@ -41,6 +48,12 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
       setAgentId(existingAgent.id);
       setCreatedAt(new Date(existingAgent.createdAt));
       setIsEditing(true);
+      
+      // Load style settings if they exist
+      if (existingAgent.primaryColor) setPrimaryColor(existingAgent.primaryColor);
+      if (existingAgent.backgroundColor) setBackgroundColor(existingAgent.backgroundColor);
+      if (existingAgent.outsideImageUrl) setOutsideImageUrl(existingAgent.outsideImageUrl);
+      if (existingAgent.outsideText) setOutsideText(existingAgent.outsideText);
     } else {
       setBotName('AI Assistant');
       setSelectedLLM('gpt-4o');
@@ -49,6 +62,10 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
       setAgentId('');
       setCreatedAt(new Date());
       setIsEditing(false);
+      setPrimaryColor('#3B82F6');
+      setBackgroundColor('#F3F4F6');
+      setOutsideImageUrl('');
+      setOutsideText('Chat with our AI assistant!');
     }
     setShowChatbot(true); // Always show chatbot by default
     setActiveTab('configuration');
@@ -63,6 +80,10 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
         model: selectedLLM,
         temperature: temperature,
         createdAt: createdAt,
+        primaryColor,
+        backgroundColor,
+        outsideImageUrl,
+        outsideText
       };
       
       updateAgent(updatedAgent);
@@ -78,6 +99,10 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
         model: selectedLLM,
         temperature: temperature,
         createdAt: new Date(),
+        primaryColor,
+        backgroundColor,
+        outsideImageUrl,
+        outsideText
       };
       
       saveAgent(newAgent);
@@ -99,7 +124,11 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
         prompt: promptText,
         model: selectedLLM,
         temperature: temperature,
-        createdAt: createdAt
+        createdAt: createdAt,
+        primaryColor,
+        backgroundColor,
+        outsideImageUrl,
+        outsideText
       };
     } else if (botName && promptText) {
       return {
@@ -108,7 +137,11 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
         prompt: promptText,
         model: selectedLLM,
         temperature: temperature,
-        createdAt: new Date()
+        createdAt: new Date(),
+        primaryColor,
+        backgroundColor,
+        outsideImageUrl,
+        outsideText
       };
     }
     return null;
@@ -116,6 +149,10 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
 
   const handleTestChatbot = () => {
     setShowChatbot(true);
+  };
+  
+  const handleRefreshChatbot = () => {
+    setRefreshChatbot(prev => prev + 1);
   };
 
   const handleBackToConfig = () => {
@@ -345,6 +382,95 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
                             <p className="text-gray-500 text-sm mb-4">Upload avatar image</p>
                             <Button variant="outline" size="sm">Select Image</Button>
                           </div>
+                          
+                          <div className="mt-4">
+                            <Label className="block font-medium mb-2">Bot Name (displayed in chat)</Label>
+                            <Input 
+                              value={botName}
+                              onChange={(e) => setBotName(e.target.value)}
+                              className="max-w-md"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-xl font-semibold mb-4">Colors</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <Label className="block font-medium mb-2">Primary Color</Label>
+                            <div className="flex items-center gap-3">
+                              <div 
+                                className="w-10 h-10 rounded-full" 
+                                style={{backgroundColor: primaryColor}}
+                              ></div>
+                              <div className="flex items-center gap-2">
+                                <Input 
+                                  type="color" 
+                                  value={primaryColor} 
+                                  onChange={(e) => setPrimaryColor(e.target.value)}
+                                  className="w-12 p-1 h-8"
+                                />
+                                <Input 
+                                  type="text" 
+                                  value={primaryColor}
+                                  onChange={(e) => setPrimaryColor(e.target.value)}
+                                  className="w-36"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <Label className="block font-medium mb-2">Background Color</Label>
+                            <div className="flex items-center gap-3">
+                              <div 
+                                className="w-10 h-10 rounded-full" 
+                                style={{backgroundColor: backgroundColor}}
+                              ></div>
+                              <div className="flex items-center gap-2">
+                                <Input 
+                                  type="color" 
+                                  value={backgroundColor} 
+                                  onChange={(e) => setBackgroundColor(e.target.value)}
+                                  className="w-12 p-1 h-8"
+                                />
+                                <Input 
+                                  type="text" 
+                                  value={backgroundColor}
+                                  onChange={(e) => setBackgroundColor(e.target.value)}
+                                  className="w-36"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-xl font-semibold mb-4">External Elements</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <Label className="block font-medium mb-2">Outside Image URL</Label>
+                            <Input 
+                              placeholder="https://example.com/image.png" 
+                              value={outsideImageUrl}
+                              onChange={(e) => setOutsideImageUrl(e.target.value)}
+                              className="max-w-md"
+                            />
+                            <p className="text-sm text-gray-500 mt-1">Optional: URL to an image that appears outside the chat widget</p>
+                          </div>
+                          
+                          <div>
+                            <Label className="block font-medium mb-2">Outside Text</Label>
+                            <Input 
+                              placeholder="Chat with our AI assistant!" 
+                              value={outsideText}
+                              onChange={(e) => setOutsideText(e.target.value)}
+                              className="max-w-md"
+                            />
+                            <p className="text-sm text-gray-500 mt-1">Text that appears below the chat widget button</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -370,15 +496,30 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
               <div className="w-1/2 flex flex-col">
                 <div className="p-4 bg-gray-50 border-b flex items-center justify-between">
                   <h3 className="font-medium text-gray-700">Preview: {botName}</h3>
-                  <div className="text-sm text-gray-500">
-                    {selectedLLM} · Temperature: {temperature}
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm text-gray-500">
+                      {selectedLLM} · Temperature: {temperature}
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8" 
+                      onClick={handleRefreshChatbot}
+                    >
+                      <RefreshCw size={16} />
+                    </Button>
                   </div>
                 </div>
-                <div className="flex-1 flex items-center justify-center p-4 bg-gray-100">
+                <div className="flex-1 flex items-center justify-center p-4 bg-gray-100 relative">
                   {showChatbot && getCurrentAgent() && (
-                    <div className="h-[500px] w-full max-w-md border rounded-lg overflow-hidden shadow-md bg-white">
+                    <div className="h-[400px] w-[300px] border rounded-lg overflow-hidden shadow-md bg-white relative">
+                      <div className="absolute top-2 right-2 z-10">
+                        <Button variant="ghost" size="icon" className="h-6 w-6 bg-white/80 hover:bg-white rounded-full">
+                          <X size={14} />
+                        </Button>
+                      </div>
                       <div className="h-full flex flex-col">
-                        <div className="bg-blue-600 text-white px-4 py-3 flex items-center justify-between">
+                        <div className="bg-blue-600 text-white px-4 py-3 flex items-center justify-between" style={{backgroundColor: primaryColor}}>
                           <div className="flex items-center gap-2">
                             <div className="h-8 w-8 rounded-full overflow-hidden bg-white">
                               <Bot size={20} className="h-full w-full p-1" />
@@ -392,6 +533,11 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
                               agent={getCurrentAgent()} 
                               onClose={() => {}}
                               isEmbedded={true}
+                              key={`chatbot-${refreshChatbot}`}
+                              customStyles={{
+                                primaryColor,
+                                backgroundColor
+                              }}
                             />
                           </div>
                         </div>
