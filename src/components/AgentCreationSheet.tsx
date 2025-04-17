@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Bot, Calendar, Mail, Phone, Upload, Globe, FileText, Clock, MessageSquare, ArrowLeft } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
@@ -146,43 +147,40 @@ export const AgentCreationSheet: React.FC<AgentCreationSheetProps> = ({
           
           <div className="flex-1 overflow-y-auto">
             <div className="border-b px-6">
-              <TabsList className="bg-transparent p-0 h-auto gap-6">
-                <TabsTrigger 
-                  value="configuration" 
-                  className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
-                  onClick={() => setActiveTab('configuration')}
-                >
-                  Configuration
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="tools" 
-                  className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
-                  onClick={() => setActiveTab('tools')}
-                >
-                  Tools
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="finetuning" 
-                  className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
-                  onClick={() => setActiveTab('finetuning')}
-                >
-                  Fine Tuning
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="style" 
-                  className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
-                  onClick={() => setActiveTab('style')}
-                >
-                  Style
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="history" 
-                  className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
-                  onClick={() => setActiveTab('history')}
-                >
-                  History
-                </TabsTrigger>
-              </TabsList>
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="bg-transparent p-0 h-auto gap-6">
+                  <TabsTrigger 
+                    value="configuration" 
+                    className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
+                  >
+                    Configuration
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="tools" 
+                    className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
+                  >
+                    Tools
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="finetuning" 
+                    className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
+                  >
+                    Fine Tuning
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="style" 
+                    className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
+                  >
+                    Style
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="history" 
+                    className="border-b-2 border-transparent px-0 py-4 rounded-none data-[state=active]:border-blue-500 data-[state=active]:bg-transparent"
+                  >
+                    History
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
 
             <div className="flex flex-row h-full">
